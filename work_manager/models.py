@@ -45,7 +45,7 @@ class WorkOrder(models.Model):
         CANCEL = 4, "Cancel"
         CANCEL_BY_GUEST = 5, "Cancel by guest"
 
-    work_order_nuber = models.UUIDField(
+    work_order_number = models.UUIDField(
         primary_key=True,
         unique=True,
         default=uuid.uuid4,
@@ -94,9 +94,19 @@ class Cleaning(WorkOrder):
         self.work_type = self.WorkType.CLEANING
         super().save(**kwargs)
 
+    def clean(self):
+        if self.created_by and self.created_by.role_type == User.RoleType.GUEST:
+            raise ValidationError(f"Cleaning work order can be create by guest")
+        super().clean()
+
 
 class MaidRequest(WorkOrder):
     description = models.TextField(null=True, blank=True)
+
+    def clean(self):
+        if self.created_by and self.created_by.role_type == User.RoleType.GUEST:
+            raise ValidationError(f" MaidRequest work order can be create by guest")
+        super().clean()
 
     def save(self, *args, **kwargs):
         self.work_type = self.WorkType.MAID_REQUEST
@@ -112,6 +122,13 @@ class TechnicianRequest(WorkOrder):
 
     defect_type = models.IntegerField(choices=DefectType.choices)
 
+    def clean(self):
+        if self.created_by and self.created_by.role_type == User.RoleType.MAID:
+            raise ValidationError(
+                f" TechnicianRequest work order can be create by guest"
+            )
+        super().clean()
+
     def save(self, *args, **kwargs):
         self.work_type = self.WorkType.TECHNICIAN_REQUEST
         super().save(**kwargs)
@@ -119,6 +136,11 @@ class TechnicianRequest(WorkOrder):
 
 class AmenityRequest(WorkOrder):
     amenity_request_list = models.JSONField()
+
+    def clean(self):
+        if self.created_by and self.created_by.role_type != User.RoleType.GUEST:
+            raise ValidationError(f" AmenityRequest work order can be create by guest")
+        super().clean()
 
     def save(self, *args, **kwargs):
         self.work_type = self.WorkType.AMENITY_REQUEST
