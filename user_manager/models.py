@@ -20,7 +20,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     class RoleType(models.IntegerChoices):
         GUEST = 0
         MAID = 1
-        SUPER_MAID = 2
+        SUPERVISOR = 2
 
     id = models.UUIDField("ID", primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(
@@ -33,22 +33,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     objects = UserManager()
 
+    @property
+    def is_maid(self):
+        return self.role_type == self.RoleType.MAID
 
-# from django.db import models
+    @property
+    def is_supervisor(self):
+        return self.role_type == self.RoleType.SUPERVISOR
 
-
-# class common(models.Model):  # COMM0N
-#     name = models.CharField(max_length=100)
-
-#     class Meta:
-#         abstract = True
-
-
-# class Student(common):  # STUDENT
-#     rollno = models.IntegerField()
-
-
-# class Teacher(Student):  # TEACHER
-#     ID = models.IntegerField()
-
-# class Parent(Student):
+    @property
+    def is_guest(self):
+        return self.role_type == self.RoleType.SUPERVISOR
