@@ -1,15 +1,6 @@
-import re
-import sys
-
-
-from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist, ValidationError
-
-from django.db import IntegrityError
-from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
-from rest_framework.generics import get_object_or_404
 
 from work_manager.models import WorkOrder
 
@@ -17,4 +8,22 @@ from work_manager.models import WorkOrder
 class WorkOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = WorkOrder
-        fields = "__all__"
+
+        fields = [
+            "work_order_number",
+            "created_by",
+            "assigned_to",
+            "room",
+            "start_at",
+            "finished_at",
+            "work_type",
+            "work_status",
+        ]
+
+    def create(self, validated_data):
+        request = self.context.get("request")
+        validated_data["user"] = request.user
+        try:
+            return super().create(validated_data)
+        except ValidationError as e:
+            raise serializers.ValidationError(e.message)
