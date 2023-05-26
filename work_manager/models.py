@@ -66,7 +66,7 @@ class WorkOrder(models.Model):
         default=None,
         related_name="assigned_task",
     )
-    room = models.IntegerField()
+    room = models.PositiveIntegerField()
     start_at = models.DateTimeField(editable=False, auto_now_add=True)
     finished_at = models.DateTimeField(null=True, blank=True, default=None)
     work_type = models.IntegerField(choices=WorkType.choices, default=WorkType.CLEANING)
