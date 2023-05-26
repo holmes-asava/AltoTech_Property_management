@@ -46,9 +46,7 @@ class WorkOrder(models.Model):
         CANCEL_BY_GUEST = 5, "Cancel by guest"
 
     work_order_number = models.UUIDField(
-        primary_key=True,
-        unique=True,
-        default=uuid.uuid4,
+        primary_key=True, unique=True, default=uuid.uuid4, editable=False
     )
     created_by = models.ForeignKey(
         User,
@@ -67,7 +65,7 @@ class WorkOrder(models.Model):
         related_name="assigned_task",
     )
     room = models.PositiveIntegerField()
-    start_at = models.DateTimeField(editable=False, auto_now_add=True)
+    start_at = models.DateTimeField(null=True, blank=True, default=None)
     finished_at = models.DateTimeField(null=True, blank=True, default=None)
     work_type = models.IntegerField(choices=WorkType.choices, default=WorkType.CLEANING)
     work_status = models.IntegerField(
