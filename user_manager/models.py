@@ -18,7 +18,7 @@ from user_manager.managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
     class RoleType(models.IntegerChoices):
-        USER = 0
+        GUEST = 0
         MAID = 1
         SUPER_MAID = 2
 
@@ -28,7 +28,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField("first name", max_length=32, blank=True)
     last_name = models.CharField("last name", max_length=32, blank=True)
-    role_type = models.IntegerField(choices=RoleType.choices, default=RoleType.USER)
+    role_type = models.IntegerField(choices=RoleType.choices, default=RoleType.GUEST)
     is_staff = models.BooleanField("staff status", default=False)
     USERNAME_FIELD = "email"
     objects = UserManager()
