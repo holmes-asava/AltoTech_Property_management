@@ -11,18 +11,19 @@ class WorkOrderSerializer(serializers.ModelSerializer):
 
         fields = [
             "work_order_number",
-            "created_by",
             "assigned_to",
             "room",
-            "start_at",
             "finished_at",
             "work_type",
             "work_status",
         ]
+        read_only = [
+            "work_order_number",
+        ]
 
     def create(self, validated_data):
         request = self.context.get("request")
-        validated_data["user"] = request.user
+        validated_data["created_by"] = request.user
         try:
             return super().create(validated_data)
         except ValidationError as e:
