@@ -1,3 +1,4 @@
+from typing import Any
 import uuid
 
 from django.apps import apps
@@ -26,6 +27,17 @@ class WorkOrderManager(models.Manager):
             )
             return TypeModel.objects.create(*args, **kwargs)
         return super(WorkOrderManager, self).create(*args, **kwargs)
+
+    def update(self, *args, **kwargs):
+        if str(self) == "work_manager.WorkOrder.objects":
+            type = kwargs.get("work_type")
+            if type == None:
+                raise ValidationError("work_type can't be None")
+            TypeModel = apps.get_model(
+                "work_manager", WorkOrder.WorkType(type).label.replace(" ", "")
+            )
+            return TypeModel.objects.update(*args, **kwargs)
+        return super(WorkOrderManager, self).update(*args, **kwargs)
 
 
 class WorkOrder(models.Model):
