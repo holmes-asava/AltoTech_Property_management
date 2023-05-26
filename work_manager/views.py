@@ -5,10 +5,11 @@ from rest_framework.response import Response
 from rest_framework.serializers import BaseSerializer
 from config.permissions import *
 from work_manager.models import WorkOrder
-from work_manager.serializers import WorkOrderSerializer
+from work_manager.serializers import WorkOrderSerializer, UpdateWorkOrderSerializer
 
 
 class WorkViewSet(
+    mixins.ListModelMixin,
     mixins.CreateModelMixin,
     viewsets.GenericViewSet,
     mixins.UpdateModelMixin,
@@ -32,3 +33,9 @@ class WorkViewSet(
         if self.request.user.is_guest:
             return self.queryset.filter(created_by=self.request.user)
         return self.queryset
+
+    def get_serializer_class(self):
+        if self.action in ["partial_update", "update"]:
+            return UpdateWorkOrderSerializer
+
+        return self.serializer_class
