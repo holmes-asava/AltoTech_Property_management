@@ -47,6 +47,7 @@ class WorkOrderSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "This WorkOrder type doesn't support defect_type field"
             )
+        return super().validate(data)
 
     def create(self, validated_data):
         request = self.context.get("request")
