@@ -32,4 +32,4 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     @property
     def is_guest(self):
-        return self.role_type == self.RoleType.SUPERVISOR
+        return self.role_type == self.RoleType.GUEST
