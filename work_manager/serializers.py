@@ -31,6 +31,10 @@ class WorkOrderSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, data):
+        if hasattr(self, "initial_data"):
+            unknown_keys = set(self.initial_data.keys()) - set(self.fields.keys())
+            if unknown_keys:
+                raise ValidationError("Got unknown fields: {}".format(unknown_keys))
         amenity_request_list = data.get("amenity_request_list")
         description = data.get("description")
         defect_type = data.get("defect_type")
@@ -68,7 +72,11 @@ class UpdateWorkOrderSerializer(WorkOrderSerializer):
             "room",
             "finished_at",
             "work_status",
-            "amenity_request_list",
-            "description",
-            "defect_type",
         ]
+
+    def update(self, instance, validated_data):
+        try:
+            return super().update(instance, validated_data)
+        except ValidationError as e:
+            detail = getattr(e, "message", None) or str(e)
+            raise serializers.ValidationError(detail)
