@@ -1,18 +1,7 @@
 import uuid
-
-from django.apps import apps
-from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
-from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
-from django.db.models import Max, Q
-from django.db.models.constraints import UniqueConstraint
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.utils import timezone
-
 from user_manager.managers import UserManager
 
 

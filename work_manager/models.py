@@ -1,18 +1,9 @@
-from typing import Any
 import uuid
+from django.core.exceptions import ValidationError, PermissionDenied
 
 from django.apps import apps
-from django.conf import settings
-from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin
-from django.core.exceptions import ValidationError
-from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
-from django.db.models import Max, Q
-from django.db.models.constraints import UniqueConstraint
-from django.db.models.signals import pre_save
-from django.dispatch import receiver
-from django.utils import timezone
+
 from user_manager.models import User
 
 
@@ -106,7 +97,7 @@ class Cleaning(WorkOrder):
 
     def clean(self):
         if self.created_by and self.created_by.role_type == User.RoleType.GUEST:
-            raise ValidationError(f"Cleaning work order can be create by guest")
+            raise PermissionDenied(f"Cleaning work order can be create by guest")
         super().clean()
 
 
@@ -115,7 +106,7 @@ class MaidRequest(WorkOrder):
 
     def clean(self):
         if self.created_by and self.created_by.role_type == User.RoleType.GUEST:
-            raise ValidationError(f" MaidRequest work order can be create by guest")
+            raise PermissionDenied(f" MaidRequest work order can be create by guest")
         super().clean()
 
     def save(self, *args, **kwargs):
@@ -134,7 +125,7 @@ class TechnicianRequest(WorkOrder):
 
     def clean(self):
         if self.created_by and self.created_by.role_type == User.RoleType.MAID:
-            raise ValidationError(
+            raise PermissionDenied(
                 f" TechnicianRequest work order can be create by guest"
             )
         super().clean()
@@ -149,7 +140,7 @@ class AmenityRequest(WorkOrder):
 
     def clean(self):
         if self.created_by and self.created_by.role_type != User.RoleType.GUEST:
-            raise ValidationError(f" AmenityRequest work order can be create by guest")
+            raise PermissionDenied(f" AmenityRequest work order can be create by guest")
         super().clean()
 
     def save(self, *args, **kwargs):
