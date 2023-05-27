@@ -5,7 +5,7 @@ The first version is designed specifically for hotels. Our core functionality is
 # Initial Superuser account
 
 username : dev@gmail.com
-password : test@password
+password : test_password
 
 # Docker
 
