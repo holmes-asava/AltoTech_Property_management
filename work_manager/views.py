@@ -9,9 +9,9 @@ from work_manager.serializers import WorkOrderSerializer, UpdateWorkOrderSeriali
 
 
 class WorkViewSet(
+    viewsets.GenericViewSet,
     mixins.ListModelMixin,
     mixins.CreateModelMixin,
-    viewsets.GenericViewSet,
     mixins.UpdateModelMixin,
 ):
     queryset = WorkOrder.objects.all()
@@ -20,7 +20,7 @@ class WorkViewSet(
     def get_permissions(self):
         permission_classes = None
         if self.action in ["partial_update", "update"]:
-            permission_classes = [IsMaid | IsSupervisor]
+            permission_classes = [IsMaid | IsSupervisor | IsSuperuser]
         elif self.action in ["create"]:
             permission_classes = [IsAuthenticated]
 

@@ -1,10 +1,6 @@
 from rest_framework.permissions import BasePermission
 
-__all__ = [
-    "IsAuthenticated",
-    "IsMaid",
-    "IsSupervisor",
-]
+__all__ = ["IsAuthenticated", "IsMaid", "IsSupervisor", "IsSuperuser"]
 
 
 class IsAuthenticated(BasePermission):
