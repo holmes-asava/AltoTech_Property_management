@@ -48,9 +48,7 @@ class WorkOrder(models.Model):
         CANCEL = 4, "Cancel"
         CANCEL_BY_GUEST = 5, "Cancel by guest"
 
-    work_order_number = models.UUIDField(
-        primary_key=True, unique=True, default=uuid.uuid4, editable=False
-    )
+    work_order_number = models.AutoField(primary_key=True)
     created_by = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
