@@ -19,6 +19,7 @@ class WorkOrderSerializer(serializers.ModelSerializer):
             "work_order_number",
             "assigned_to",
             "room",
+            "start_at",
             "finished_at",
             "work_type",
             "work_status",
@@ -70,6 +71,7 @@ class UpdateWorkOrderSerializer(WorkOrderSerializer):
         fields = [
             "assigned_to",
             "room",
+            "start_at",
             "finished_at",
             "work_status",
         ]
